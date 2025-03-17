@@ -1,17 +1,18 @@
 #!/usr/bin/env python3
+
 import json
-import pandas as pd
 
-# Read in the JSON data from the file 'data/schacon.repos.json'
+#open data and load data
 with open('data/schacon.repos.json', 'r') as file:
-    repos = json.load(file)
+    data = json.load(file)
 
-# Normalize the JSON data into a pandas DataFrame
-df = pd.json_normalize(repos)
 
-# Select only the four required fields:
-# name, html_url, updated_at, visibility
-df_subset = df[['name', 'html_url', 'updated_at', 'visibility']]
-
-# Export the first 5 lines to chacon.csv without headers and index
-df_subset.head(5).to_csv('chacon.csv', index=False, header=False)
+#process first 5 entries and write them in the csv
+with open('chacon.csv', 'w') as csv_file:
+    for repo in data[:5]:
+        name = repo.get('name', '')
+        html_url = repo.get('html_url', '')
+        updated_at = repo.get('updated_at', '')
+        visibility = repo.get('visibility', '')
+        csv_line = f"{name},{html_url},{updated_at},{visibility}\n"
+        csv_file.write(csv_line)
